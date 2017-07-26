@@ -278,7 +278,11 @@ export interface MiddlewareAPI<S> {
  * logging actions, performing side effects like routing, or turning an
  * asynchronous API call into a series of synchronous actions.
  */
-export interface Middleware {
+export interface Middleware<S> {
+  (api: MiddlewareAPI<S>): (next: Dispatch<S>) => Dispatch<S>;
+}
+
+export interface GenericMiddleware {
   <S>(api: MiddlewareAPI<S>): (next: Dispatch<S>) => Dispatch<S>;
 }
 
@@ -299,7 +303,7 @@ export interface Middleware {
  * @param middlewares The middleware chain to be applied.
  * @returns A store enhancer applying the middleware.
  */
-export function applyMiddleware(...middlewares: Middleware[]): GenericStoreEnhancer;
+export function applyMiddleware(...middlewares: GenericMiddleware[]): GenericStoreEnhancer;
 
 
 /* action creators */
